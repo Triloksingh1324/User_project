@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import axios from "axios";
+import axios from "../middleware/axiosInstance";
 import { useNavigate } from "react-router-dom";
+import { PacmanLoader } from 'react-spinners';
 export default function Signup() {
   const navigate = useNavigate();
   const [user, setUser] = useState({
@@ -8,15 +9,20 @@ export default function Signup() {
     password: "",
     username: "",
   });
+  const [loader, setLoader] = useState(false);
   const onSignup = async () => {
+    setLoader(true);
     try {
       await axios.post(
-        `${process.env.REACT_APP_URL}/api/auth/signup/`,
+        '/api/auth/signup/',
         user
       );
       navigate("/login");
     } catch (error) {
       console.log("Signup failed", error.message);
+    }
+    finally {
+      setLoader(false);
     }
   };
   return (
@@ -90,13 +96,19 @@ export default function Signup() {
               </div>
           
           </div>
+          {loader ? (
+          <div className="flex justify-center">
+            <PacmanLoader size={24} color="#4A90E2" />
+          </div>
+        ) : (
           <button
             type="submit"
-            className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
             onClick={onSignup}
+            className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
           >
             Create Account
           </button>
+        )}
         </div>
       </div>
     </>

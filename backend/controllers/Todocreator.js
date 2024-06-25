@@ -1,5 +1,5 @@
 import Todo from "../models/Todomodel.js";
-
+import User from "../models/Usermodel.js";
 export const Todos = async (req, res) => {
   const { title } = req.body;
 
@@ -64,17 +64,24 @@ export const deleteTodo = async (req, res) => {
   }
 };
 
-export const getTodosByUserId = async (req, res) => {
-  const { userId } = req.params;
+export const getTodosByUserName = async (req, res) => {
+  const { username } = req.params;
 
   try {
-    const todos = await Todo.find({ userId });
+    const user = await User.findOne({ username: username });
+
+    if (!user) {
+      return res.status(404).json({ msg: "User not found" });
+    }
+
+    const todos = await Todo.find({ userId: user._id });
     if (!todos || todos.length === 0) {
       return res.status(404).json({ msg: "No todos found for this user" });
     }
+
     res.json(todos);
-  } catch (error) {
-    console.error(error.message);
+  } catch (err) {
+    console.log(err);
     res.status(500).json({ msg: "Something went wrong" });
   }
 };

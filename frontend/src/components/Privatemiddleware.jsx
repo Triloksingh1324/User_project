@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
-import axios from 'axios';
+import axios from '../middleware/axiosInstance';
 import { refreshAccessToken } from '../refreshtoken';
+import {BallTriangle} from 'react-loader-spinner';
 
 const PrivateRoute = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(null);
@@ -16,13 +17,19 @@ const PrivateRoute = () => {
         return;
       }
 
+      const timeoutPromise = new Promise((_, reject) =>
+        setTimeout(() => reject(new Error('timeout')), 10000)
+      );
+
+      const verificationPromise = axios.get('/api/auth/verify-token');
+
       try {
-        await axios.get(`${process.env.REACT_APP_URL}/api/auth/verify-token`, {
-          headers: { Authorization: `Bearer ${accessToken}` },
-        });
+        await Promise.race([verificationPromise, timeoutPromise]);
         setIsAuthenticated(true);
       } catch (error) {
-        if (error.response && error.response.status === 403) {
+        if (error.message === 'timeout') {
+          setIsAuthenticated(false);
+        } else if (error.response && error.response.status === 403) {
           const newAccessToken = await refreshAccessToken();
           if (newAccessToken) {
             setIsAuthenticated(true);
@@ -39,7 +46,9 @@ const PrivateRoute = () => {
   }, [location]);
 
   if (isAuthenticated === null) {
-    return <div>Loading...</div>;
+    return <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+    <BallTriangle height="80" width="80" radius="9" color="green" ariaLabel="loading" />
+  </div>
   }
 
   return isAuthenticated ? <Outlet /> : <Navigate to="/login" />;

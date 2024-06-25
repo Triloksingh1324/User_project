@@ -1,12 +1,10 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import axios from '../middleware/axiosInstance';
 import { useNavigate } from 'react-router-dom';
 import { PacmanLoader } from 'react-spinners';
 import { toast } from 'react-toastify';
-// import dotenv from 'dotenv';
 import 'react-toastify/dist/ReactToastify.css';
- 
-// dotenv.config();
+
 const Login = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState({
@@ -18,7 +16,7 @@ const Login = () => {
   const onLogin = async () => {
     setLoader(true);
     try {
-      const response = await axios.post(`${process.env.REACT_APP_URL}/api/auth/login`, user);
+      const response = await axios.post('/api/auth/login', user);
       const { accessToken, refreshToken } = response.data;
   
       localStorage.setItem('accessToken', accessToken);

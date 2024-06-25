@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import axios from '../middleware/axiosInstance';
 
 function AdminTodos() {
   const [username, setUsername] = useState('');
@@ -7,16 +7,8 @@ function AdminTodos() {
   const [error, setError] = useState('');
 
   const fetchUserTodos = async () => {
-    const accessToken = localStorage.getItem('accessToken');
-    if (!accessToken) {
-      console.error('No access token found');
-      return;
-    }
-
     try {
-      const response = await axios.get(`${process.env.REACT_APP_URL}/api/todo/todos/${username}`, {
-        headers: { Authorization: `Bearer ${accessToken}` },
-      });
+      const response = await axios.get(`/api/todo/todos/${username}`);
       setTodos(response.data);
       setError('');
     } catch (error) {

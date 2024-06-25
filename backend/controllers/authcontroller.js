@@ -119,7 +119,7 @@ export const Admin = async (req, res) => {
 
   try {
     const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
-    const user = await User.findOne({ userId: decoded.id });
+    const user = await User.findById({_id:decoded.id });
 
     if (user && user.isAdmin) {
       return res.status(200).json({ isAdmin: true });
@@ -127,7 +127,7 @@ export const Admin = async (req, res) => {
       return res.status(403).json({ isAdmin: false });
     }
   } catch (error) {
-    console.error(error.message);
+   
     res.status(500).json({ msg: "Server Error" });
   }
 };

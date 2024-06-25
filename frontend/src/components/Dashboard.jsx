@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import axios from '../middleware/axiosInstance';
 import { useNavigate } from 'react-router-dom';
 
 function App() {
@@ -10,27 +10,14 @@ function App() {
   const [editingTodoTitle, setEditingTodoTitle] = useState('');
 
   const navigate = useNavigate();
-
   useEffect(() => {
-    const accessToken = localStorage.getItem('accessToken');
-    if (!accessToken) {
-      console.error('No access token found');
-      return;
-    }
     checkAdminStatus();
     fetchTodos();
   }, []);
 
   const checkAdminStatus = async () => {
-    const accessToken = localStorage.getItem('accessToken');
-    if (!accessToken) {
-      console.error('No access token found');
-      return;
-    }
     try {
-      const response = await axios.post(`${process.env.REACT_APP_URL}/api/auth/admin`, {}, {
-        headers: { Authorization: `Bearer ${accessToken}` },
-      });
+      const response = await axios.post('/api/auth/admin');
       console.log(response.data);
       setIsAdmin(response.data.isAdmin);
     } catch (error) {
@@ -39,16 +26,8 @@ function App() {
   };
   
   const fetchTodos = async () => {
-    const accessToken = localStorage.getItem('accessToken');
-    if (!accessToken) {
-      console.error('No access token found');
-      return;
-    }
-
     try {
-      const response = await axios.get(`${process.env.REACT_APP_URL}/api/todo/todos`, {
-        headers: { Authorization: `Bearer ${accessToken}` },
-      });
+      const response = await axios.get('/api/todo/todos');
       setTodos(response.data);
     } catch (error) {
       console.error('Error fetching todos', error);
@@ -56,14 +35,12 @@ function App() {
   };
 
   const addTodo = async () => {
-    const accessToken = localStorage.getItem('accessToken');
-    if (!newTodo.trim() || !accessToken) return;
 
+    if (!newTodo.trim()) return;
     try {
       const response = await axios.post(
-        `${process.env.REACT_APP_URL}/api/todo/todos`,
-        { title: newTodo },
-        { headers: { Authorization: `Bearer ${accessToken}` } }
+        '/api/todo/todos',
+        { title: newTodo }
       );
       setTodos([...todos, response.data]);
       setNewTodo('');
@@ -73,14 +50,11 @@ function App() {
   };
 
   const updateTodo = async (id) => {
-    const accessToken = localStorage.getItem('accessToken');
-    if (!editingTodoTitle.trim() || !accessToken) return;
-
+    if (!editingTodoTitle.trim()) return;
     try {
       const response = await axios.put(
-        `${process.env.REACT_APP_URL}/api/todo/todos/${id}`,
-        { title: editingTodoTitle },
-        { headers: { Authorization: `Bearer ${accessToken}` } }
+        `/api/todo/todos/${id}`,
+        { title: editingTodoTitle }
       );
       setTodos(todos.map(todo => (todo._id === id ? response.data : todo)));
       setEditingTodoId(null);
@@ -91,13 +65,8 @@ function App() {
   };
 
   const deleteTodo = async (id) => {
-    const accessToken = localStorage.getItem('accessToken');
-    if (!accessToken) return;
-
     try {
-      await axios.delete(`${process.env.REACT_APP_URL}/api/todo/todos/${id}`, {
-        headers: { Authorization: `Bearer ${accessToken}` },
-      });
+      await axios.delete(`${process.env.REACT_APP_URL}/api/todo/todos/${id}`);
       setTodos(todos.filter(todo => todo._id !== id));
     } catch (error) {
       console.error('Error deleting todo', error);

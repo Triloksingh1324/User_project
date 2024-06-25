@@ -41,6 +41,7 @@ export const authenticateToken = async (req, res, next) => {
             res.sendStatus(500);
           }
         } else {
+  
           return res.sendStatus(403);
         }
       } else {
