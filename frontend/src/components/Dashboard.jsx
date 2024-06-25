@@ -28,7 +28,7 @@ function App() {
       return;
     }
     try {
-      const response = await axios.post('https://user-project-ie89.onrender.com/api/auth/admin', {}, {
+      const response = await axios.post(`${process.env.REACT_APP_URL}/api/auth/admin`, {}, {
         headers: { Authorization: `Bearer ${accessToken}` },
       });
       console.log(response.data);
@@ -46,7 +46,7 @@ function App() {
     }
 
     try {
-      const response = await axios.get('https://user-project-ie89.onrender.com/api/todo/todos', {
+      const response = await axios.get(`${process.env.REACT_APP_URL}/api/todo/todos`, {
         headers: { Authorization: `Bearer ${accessToken}` },
       });
       setTodos(response.data);
@@ -61,7 +61,7 @@ function App() {
 
     try {
       const response = await axios.post(
-        'https://user-project-ie89.onrender.com/api/todo/todos',
+        `${process.env.REACT_APP_URL}/api/todo/todos`,
         { title: newTodo },
         { headers: { Authorization: `Bearer ${accessToken}` } }
       );
@@ -78,7 +78,7 @@ function App() {
 
     try {
       const response = await axios.put(
-        `https://user-project-ie89.onrender.com/api/todo/todos/${id}`,
+        `${process.env.REACT_APP_URL}/api/todo/todos/${id}`,
         { title: editingTodoTitle },
         { headers: { Authorization: `Bearer ${accessToken}` } }
       );
@@ -95,7 +95,7 @@ function App() {
     if (!accessToken) return;
 
     try {
-      await axios.delete(`https://user-project-ie89.onrender.com/api/todo/todos/${id}`, {
+      await axios.delete(`${process.env.REACT_APP_URL}/api/todo/todos/${id}`, {
         headers: { Authorization: `Bearer ${accessToken}` },
       });
       setTodos(todos.filter(todo => todo._id !== id));

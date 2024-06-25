@@ -11,7 +11,7 @@ export default function Signup() {
   const onSignup = async () => {
     try {
       await axios.post(
-        "https://user-project-ie89.onrender.com/api/auth/signup/",
+        `${process.env.REACT_APP_URL}/api/auth/signup/`,
         user
       );
       navigate("/login");

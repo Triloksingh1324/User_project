@@ -17,7 +17,7 @@ const PrivateRoute = () => {
       }
 
       try {
-        await axios.get('https://user-project-ie89.onrender.com/api/auth/verify-token', {
+        await axios.get(`${process.env.REACT_APP_URL}/api/auth/verify-token`, {
           headers: { Authorization: `Bearer ${accessToken}` },
         });
         setIsAuthenticated(true);

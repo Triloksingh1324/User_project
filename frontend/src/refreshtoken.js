@@ -5,7 +5,7 @@ export const refreshAccessToken = async () => {
   if (!refreshToken) return null;
 
   try {
-    const response = await axios.post('https://user-project-ie89.onrender.com/api/auth/refresh-token', { token: refreshToken });
+    const response = await axios.post(`${process.env.REACT_APP_URL}/api/auth/refresh-token`, { token: refreshToken });
     const { accessToken } = response.data;
 
     localStorage.setItem('accessToken', accessToken);

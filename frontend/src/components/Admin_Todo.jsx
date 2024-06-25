@@ -14,7 +14,7 @@ function AdminTodos() {
     }
 
     try {
-      const response = await axios.get(`https://user-project-ie89.onrender.com/api/todo/todos/${username}`, {
+      const response = await axios.get(`${process.env.REACT_APP_URL}/api/todo/todos/${username}`, {
         headers: { Authorization: `Bearer ${accessToken}` },
       });
       setTodos(response.data);

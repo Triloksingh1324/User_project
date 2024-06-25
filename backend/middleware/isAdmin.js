@@ -9,8 +9,8 @@ export const isAdmin = async (req, res, next) =>{
 
   try {
     const decodedToken = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET);
-    const username = decodedToken.username;
-    const user = await User.findOne({ username });
+    const userId = decodedToken.id;
+    const user = await User.findOne({ userId });
     if (!user) {
       return res.status(404).json({ msg: 'User not found' });
     }
