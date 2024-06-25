@@ -47,7 +47,7 @@ const PrivateRoute = () => {
 
   if (isAuthenticated === null) {
     return <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-    <BallTriangle height="80" width="80" radius="9" color="green" ariaLabel="loading" />
+    <BallTriangle height={100} width={100} radius="5" color="green" ariaLabel="loading" />
   </div>
   }
 
